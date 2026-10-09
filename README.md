@@ -32,8 +32,8 @@ The initial garden scene can run without Supabase credentials. The Supabase clie
 - Rapier remains installed for future collision-based gameplay. The current garden has no physical interactions, so it does not download or start the physics engine.
 - Keep visual assets and future effects behind scene-level imports. Add physics only to scenes that need collisions or physical movement.
 
-The protagonist, Aren, is a later witness to preserved echoes of the beginning. He observes those memories without entering or changing the events described in Scripture. The spiritual presence is represented through light and atmosphere, never as an anthropomorphic character.
+The protagonist, Eren, is a traveler from a violence-scarred future. A fictional temporal singularity casts him into preserved echoes of the beginning. He observes those memories without changing the events described in Scripture. The singularity is original science fiction, not a biblical claim. The spiritual presence is represented through light and atmosphere, never as an anthropomorphic character.
 
 ## Current slice
 
-The first playable slice introduces the garden, its witness, a preserved echo of the Fall's consequences, and a small decision about what to do with a memory. Move Aren with WASD or the arrow keys, approach the golden echo, and press E to interact. Touch controls appear on narrow screens. The choice affects Aren's response to the memory, not the historical event itself.
+The first playable slice introduces the garden, its witness, a preserved echo of the Fall's consequences, and a small decision about what to do with a memory. Move Eren with WASD or the arrow keys, approach the golden echo, and press E to interact. Touch controls appear on narrow screens. The choice affects Eren's response to the memory, not the historical event itself.
