@@ -34,6 +34,11 @@ export function GameApp() {
     send({ type: 'CHOOSE', choice });
   };
 
+  const begin = () => {
+    setSceneEnabled(true);
+    send({ type: 'BEGIN' });
+  };
+
   const holdControl = (control: GameControl, pressed: boolean) => (event: PointerEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setControl(control, pressed);
@@ -77,8 +82,8 @@ export function GameApp() {
           <>
             <p className="eyebrow">Una memoria que no altera la historia</p>
             <h1>Antes del<br /><em>primer silencio.</em></h1>
-            <p className="story-copy">Mucho después, Aren encontró un eco bajo la piedra. No era una puerta al pasado, sino una memoria del mundo que fue.</p>
-            <button className="primary-button" type="button" onClick={() => { setSceneEnabled(true); send({ type: 'BEGIN' }); }}>
+            <p className="story-copy">Eren viene de un futuro quebrado por la violencia. Una grieta en el tiempo lo arrojó ante una memoria del principio. Puede recorrerla y enfrentar sus ecos, pero no cambiar lo ocurrido.</p>
+            <button className="primary-button" type="button" onClick={begin}>
               Entrar en el jardín <span aria-hidden="true">↗</span>
             </button>
             <p className="button-note">Una experiencia narrativa · 4 min</p>
@@ -89,7 +94,7 @@ export function GameApp() {
           <>
             <p className="eyebrow">El mundo aún respira en armonía</p>
             <h2>Todo tenía<br /><em>un lugar.</em></h2>
-            <p className="story-copy">La luz tocaba el agua sin romperla. Guía a Aren hasta el halo dorado y escucha el primer eco; esta memoria puede contemplarse, jamás reescribirse.</p>
+            <p className="story-copy">La luz tocaba el agua sin romperla. Guía a Eren hasta el halo dorado y escucha el primer eco; esta memoria puede contemplarse, jamás reescribirse.</p>
             <p className="control-hint">{nearEcho ? <>Estás junto al eco · pulsa <span>E</span> para escucharlo</> : <><span>W A S D</span> o flechas para acercarte al halo</>}</p>
           </>
         )}
@@ -98,7 +103,7 @@ export function GameApp() {
           <>
             <p className="eyebrow">El primer eco ha sido encontrado</p>
             <h2>La memoria<br /><em>del principio.</em></h2>
-            <p className="story-copy">Aren escuchó el silencio que precedió a su propia historia. El recuerdo permanece intacto; lo que nazca de él dependerá de quien lo guarda.</p>
+            <p className="story-copy">Eren escuchó el silencio que precedió a su propia historia. El recuerdo permanece intacto; lo que nazca de él dependerá de quien lo guarda.</p>
             <button className="primary-button" type="button" onClick={() => send({ type: 'CONTINUE' })}>
               Seguir el eco <span aria-hidden="true">↗</span>
             </button>
@@ -109,7 +114,7 @@ export function GameApp() {
           <>
             <p className="eyebrow">La caída · un eco preservado</p>
             <h2>La confianza<br /><em>se quebró.</em></h2>
-            <p className="story-copy">Aren no presencia el acto ni lo transforma. El eco guarda sus consecuencias: vergüenza, distancia de Dios y una tierra que ahora exige trabajo doloroso. Él solo puede contemplar esta memoria; no cruzarla ni cambiar su curso.</p>
+            <p className="story-copy">Eren no presencia el acto ni lo transforma. El eco guarda sus consecuencias: vergüenza, distancia de Dios y una tierra que ahora exige trabajo doloroso. Él solo puede contemplar esta memoria; no cruzarla ni cambiar su curso.</p>
             <button className="primary-button" type="button" onClick={() => send({ type: 'CONTINUE' })}>
               Responder al testimonio <span aria-hidden="true">↗</span>
             </button>
@@ -120,7 +125,7 @@ export function GameApp() {
           <>
             <p className="eyebrow">Una decisión para quien escucha</p>
             <h2>¿Qué harás<br /><em>con esta memoria?</em></h2>
-            <p className="story-copy">El recuerdo no cambia. Lo que cambia es la manera en que Aren lo llevará consigo.</p>
+            <p className="story-copy">El recuerdo no cambia. Lo que cambia es la manera en que Eren lo llevará consigo.</p>
             <div className="choice-list">
               <button className="choice-button" type="button" onClick={() => choose('share')}>
                 <span className="choice-index">01</span><span><strong>Compartirla</strong><small>Que otros encuentren esperanza.</small></span><span className="choice-arrow">↗</span>
@@ -136,7 +141,7 @@ export function GameApp() {
           <>
             <p className="eyebrow">La memoria permanece</p>
             <h2>{story.context.choice === 'share' ? <>Una luz<br /><em>compartida.</em></> : <>Un silencio<br /><em>custodiado.</em></>}</h2>
-            <p className="story-copy">Aren volvió al mundo de piedra con una pregunta distinta. El origen seguía intacto; ahora su testimonio tenía un rumbo.</p>
+            <p className="story-copy">Eren volvió a su tiempo con una pregunta distinta. El origen seguía intacto; ahora su testimonio tenía un rumbo.</p>
             <button className="text-button" type="button" onClick={() => send({ type: 'RESTART' })}>Volver al inicio <span aria-hidden="true">↺</span></button>
           </>
         )}
