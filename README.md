@@ -25,6 +25,13 @@ The initial garden scene can run without Supabase credentials. The Supabase clie
 - `src/state`: serializable gameplay preferences and choices in Zustand.
 - `src/services`: integrations such as Supabase.
 
+## Performance foundation
+
+- The opening interface loads before the 3D scene. The garden and its rendering libraries load when the player enters.
+- The garden caps pixel density and can lower it on slower devices. Contact shadows render once instead of recalculating every frame.
+- Rapier remains installed for future collision-based gameplay. The current garden has no physical interactions, so it does not download or start the physics engine.
+- Keep visual assets and future effects behind scene-level imports. Add physics only to scenes that need collisions or physical movement.
+
 The protagonist, Aren, is a later witness to preserved echoes of the beginning. He observes those memories without entering or changing the events described in Scripture. The spiritual presence is represented through light and atmosphere, never as an anthropomorphic character.
 
 ## Current slice

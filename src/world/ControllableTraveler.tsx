@@ -2,15 +2,7 @@ import { Billboard, Float } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useCallback, useEffect, useRef } from 'react';
 import type { Group } from 'three';
-import { clearControls, isControlPressed, setControl, type GameControl } from './controlInput';
-
-const keyControls: Record<string, GameControl> = {
-  ArrowUp: 'up', w: 'up', W: 'up',
-  ArrowDown: 'down', s: 'down', S: 'down',
-  ArrowLeft: 'left', a: 'left', A: 'left',
-  ArrowRight: 'right', d: 'right', D: 'right',
-  e: 'interact', E: 'interact',
-};
+import { clearControls, isControlPressed } from './controlInput';
 
 const echoPosition = { x: 0.15, z: -4.8 };
 
@@ -28,28 +20,6 @@ export function ControllableTraveler({ active, onEchoInteract, onEchoNearby }: C
   const nearEcho = useRef(false);
   callback.current = onEchoInteract;
   rangeCallback.current = onEchoNearby;
-
-  useEffect(() => {
-    const handleKey = (event: KeyboardEvent, pressed: boolean) => {
-      const control = keyControls[event.key];
-      if (!control) return;
-      if (control !== 'interact') event.preventDefault();
-      setControl(control, pressed);
-    };
-    const onKeyDown = (event: KeyboardEvent) => handleKey(event, true);
-    const onKeyUp = (event: KeyboardEvent) => handleKey(event, false);
-    const onBlur = () => clearControls();
-
-    window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
-    window.addEventListener('blur', onBlur);
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
-      window.removeEventListener('blur', onBlur);
-      clearControls();
-    };
-  }, []);
 
   useEffect(() => {
     if (active) {
