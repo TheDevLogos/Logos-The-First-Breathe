@@ -1,8 +1,19 @@
 import { Canvas } from '@react-three/fiber';
-import { ContactShadows, Environment, Float, Sparkles } from '@react-three/drei';
-import { Physics, RigidBody } from '@react-three/rapier';
-import { Suspense } from 'react';
+import { ContactShadows, Environment, Float, PerformanceMonitor, Sparkles } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
+import { Suspense, useCallback } from 'react';
 import { ControllableTraveler } from './ControllableTraveler';
+import type { PerformanceMonitorApi } from '@react-three/drei/core/PerformanceMonitor';
+
+function AdaptiveSceneQuality() {
+  const setDpr = useThree((state) => state.setDpr);
+  const initialDpr = useThree((state) => state.viewport.initialDpr);
+  const updateResolution = useCallback(({ factor }: PerformanceMonitorApi) => {
+    setDpr(Math.max(0.75, initialDpr * factor));
+  }, [initialDpr, setDpr]);
+
+  return <PerformanceMonitor factor={1} step={0.1} onChange={updateResolution} />;
+}
 
 function Tree({ position, size = 1, fallen }: { position: [number, number, number]; size?: number; fallen: boolean }) {
   return (
@@ -31,15 +42,6 @@ function Garden({ fallen }: { fallen: boolean }) {
       <ambientLight intensity={fallen ? 0.92 : 1.3} color={fallen ? '#dac7ba' : '#fff0d4'} />
       <directionalLight castShadow position={[-5, 9, 4]} intensity={fallen ? 1.25 : 2.1} color={fallen ? '#c79d8c' : '#ffddb0'} shadow-mapSize={[1024, 1024]} />
       <Environment preset="forest" environmentIntensity={fallen ? 0.24 : 0.45} />
-
-      <Physics gravity={[0, -9.81, 0]}>
-        <RigidBody type="fixed" colliders="cuboid">
-          <mesh receiveShadow position={[0, -0.18, -6]} scale={[80, 0.3, 80]}>
-            <boxGeometry />
-            <meshStandardMaterial color={fallen ? '#71655c' : '#829376'} roughness={1} />
-          </mesh>
-        </RigidBody>
-      </Physics>
 
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.015, -6]}>
         <planeGeometry args={[80, 80]} />
@@ -76,7 +78,7 @@ function Garden({ fallen }: { fallen: boolean }) {
         </mesh>
       </Float>
       <Sparkles count={24} scale={[12, 3, 10]} size={2.2} speed={0.18} color="#f2dfac" opacity={0.48} />
-      <ContactShadows position={[0, 0.02, 0]} scale={18} blur={2.4} opacity={0.32} far={7} />
+      <ContactShadows position={[0, 0.02, 0]} scale={18} blur={2.4} opacity={0.32} far={7} frames={1} resolution={256} />
     </>
   );
 }
@@ -92,11 +94,12 @@ export function GardenScene({ active, fallen, onEchoInteract, onEchoNearby }: Ga
   return (
     <Canvas
       shadows
-      dpr={[1, 1.5]}
+      dpr={[1, 1.35]}
       camera={{ position: [0, 2.8, 9.7], fov: 42, near: 0.1, far: 90 }}
-      gl={{ antialias: true, alpha: false }}
+      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
       aria-label="Escenario 3D del jardín inicial"
     >
+      <AdaptiveSceneQuality />
       <Suspense fallback={null}>
         <Garden fallen={fallen} />
       </Suspense>

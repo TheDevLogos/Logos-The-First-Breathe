@@ -1,9 +1,11 @@
 import { useMachine } from '@xstate/react';
-import { useState, type PointerEvent } from 'react';
+import { lazy, Suspense, useEffect, useState, type PointerEvent } from 'react';
 import { storyMachine } from '../narrative/storyMachine';
 import { useGameStore } from '../state/gameStore';
-import { GardenScene } from '../world/GardenScene';
-import { setControl, tapControl, type GameControl } from '../world/controlInput';
+import { bindKeyboardControls, setControl, tapControl, type GameControl } from '../world/controlInput';
+import { SceneLoading } from './SceneLoading';
+
+const GardenScene = lazy(() => import('../world/GardenScene').then(({ GardenScene: scene }) => ({ default: scene })));
 
 const chapterLabel = 'Prólogo · Los ecos del principio';
 
@@ -13,7 +15,14 @@ export function GameApp() {
   const setReducedMotion = useGameStore((state) => state.setReducedMotion);
   const setChoice = useGameStore((state) => state.setChoice);
   const [nearEcho, setNearEcho] = useState(false);
+  const [sceneEnabled, setSceneEnabled] = useState(false);
   const stage = story.value;
+
+  useEffect(() => {
+    if (stage !== 'garden') return;
+    return bindKeyboardControls();
+  }, [stage]);
+
   const stepNumber = stage === 'title' ? '01'
     : stage === 'garden' ? '02'
       : stage === 'echo' ? '03'
@@ -32,7 +41,13 @@ export function GameApp() {
 
   return (
     <main className={`game-shell${reducedMotion ? ' reduced-motion' : ''}${stage === 'fall' ? ' chapter-fall' : ''}`}>
-      <div className="world-layer" aria-hidden="true"><GardenScene active={stage === 'garden'} fallen={stage === 'fall'} onEchoInteract={() => send({ type: 'INTERACT' })} onEchoNearby={setNearEcho} /></div>
+      <div className="world-layer">
+        {sceneEnabled ? (
+          <Suspense fallback={<SceneLoading />}>
+            <GardenScene active={stage === 'garden'} fallen={stage === 'fall'} onEchoInteract={() => send({ type: 'INTERACT' })} onEchoNearby={setNearEcho} />
+          </Suspense>
+        ) : <SceneLoading />}
+      </div>
       <div className="atmosphere" aria-hidden="true" />
 
       <header className="topbar">
@@ -63,7 +78,7 @@ export function GameApp() {
             <p className="eyebrow">Una memoria que no altera la historia</p>
             <h1>Antes del<br /><em>primer silencio.</em></h1>
             <p className="story-copy">Mucho después, Aren encontró un eco bajo la piedra. No era una puerta al pasado, sino una memoria del mundo que fue.</p>
-            <button className="primary-button" type="button" onClick={() => send({ type: 'BEGIN' })}>
+            <button className="primary-button" type="button" onClick={() => { setSceneEnabled(true); send({ type: 'BEGIN' }); }}>
               Entrar en el jardín <span aria-hidden="true">↗</span>
             </button>
             <p className="button-note">Una experiencia narrativa · 4 min</p>
