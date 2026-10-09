@@ -14,6 +14,8 @@ describe('storyMachine', () => {
     actor.send({ type: 'INTERACT' });
     expect(actor.getSnapshot().value).toBe('echo');
     actor.send({ type: 'CONTINUE' });
+    expect(actor.getSnapshot().value).toBe('fall');
+    actor.send({ type: 'CONTINUE' });
     expect(actor.getSnapshot().value).toBe('decision');
     actor.send({ type: 'CHOOSE', choice: 'share' });
 
@@ -26,6 +28,7 @@ describe('storyMachine', () => {
     const actor = createActor(storyMachine).start();
     actor.send({ type: 'BEGIN' });
     actor.send({ type: 'INTERACT' });
+    actor.send({ type: 'CONTINUE' });
     actor.send({ type: 'CONTINUE' });
     actor.send({ type: 'CHOOSE', choice: 'keep' });
     actor.send({ type: 'RESTART' });

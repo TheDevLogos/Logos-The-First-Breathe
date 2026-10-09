@@ -18,7 +18,8 @@ export const storyMachine = createMachine({
   states: {
     title: { on: { BEGIN: 'garden' } },
     garden: { on: { INTERACT: 'echo' } },
-    echo: { on: { CONTINUE: 'decision' } },
+    echo: { on: { CONTINUE: 'fall' } },
+    fall: { on: { CONTINUE: 'decision' } },
     decision: {
       on: {
         CHOOSE: {

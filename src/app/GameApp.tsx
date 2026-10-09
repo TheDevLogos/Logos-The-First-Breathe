@@ -14,6 +14,11 @@ export function GameApp() {
   const setChoice = useGameStore((state) => state.setChoice);
   const [nearEcho, setNearEcho] = useState(false);
   const stage = story.value;
+  const stepNumber = stage === 'title' ? '01'
+    : stage === 'garden' ? '02'
+      : stage === 'echo' ? '03'
+        : stage === 'fall' ? '04'
+          : stage === 'decision' ? '05' : '06';
 
   const choose = (choice: 'share' | 'keep') => {
     setChoice(choice);
@@ -26,8 +31,8 @@ export function GameApp() {
   };
 
   return (
-    <main className={`game-shell${reducedMotion ? ' reduced-motion' : ''}`}>
-      <div className="world-layer" aria-hidden="true"><GardenScene active={stage === 'garden'} onEchoInteract={() => send({ type: 'INTERACT' })} onEchoNearby={setNearEcho} /></div>
+    <main className={`game-shell${reducedMotion ? ' reduced-motion' : ''}${stage === 'fall' ? ' chapter-fall' : ''}`}>
+      <div className="world-layer" aria-hidden="true"><GardenScene active={stage === 'garden'} fallen={stage === 'fall'} onEchoInteract={() => send({ type: 'INTERACT' })} onEchoNearby={setNearEcho} /></div>
       <div className="atmosphere" aria-hidden="true" />
 
       <header className="topbar">
@@ -49,7 +54,7 @@ export function GameApp() {
       <div className="scene-caption" aria-hidden="true">
         <span>UN RELATO SOBRE EL ORIGEN</span>
         <span className="caption-line" />
-        <span>01 — EL JARDÍN</span>
+        <span>{stage === 'fall' ? '02 — LAS CONSECUENCIAS' : '01 — EL JARDÍN'}</span>
       </div>
 
       <section className={`story-card story-${stage}`} aria-live="polite" aria-atomic="true">
@@ -85,6 +90,17 @@ export function GameApp() {
           </>
         )}
 
+        {stage === 'fall' && (
+          <>
+            <p className="eyebrow">La caída · un eco preservado</p>
+            <h2>La confianza<br /><em>se quebró.</em></h2>
+            <p className="story-copy">Aren no presencia el acto ni lo transforma. El eco guarda sus consecuencias: vergüenza, distancia de Dios y una tierra que ahora exige trabajo doloroso. Él solo puede contemplar esta memoria; no cruzarla ni cambiar su curso.</p>
+            <button className="primary-button" type="button" onClick={() => send({ type: 'CONTINUE' })}>
+              Responder al testimonio <span aria-hidden="true">↗</span>
+            </button>
+          </>
+        )}
+
         {stage === 'decision' && (
           <>
             <p className="eyebrow">Una decisión para quien escucha</p>
@@ -109,7 +125,7 @@ export function GameApp() {
             <button className="text-button" type="button" onClick={() => send({ type: 'RESTART' })}>Volver al inicio <span aria-hidden="true">↺</span></button>
           </>
         )}
-        <div className="card-footer"><span>LOGOS · THE FIRST BREATHE</span><span>01 / 06</span></div>
+        <div className="card-footer"><span>LOGOS · THE FIRST BREATHE</span><span>{stepNumber} / 06</span></div>
       </section>
 
       <footer className="bottom-bar">

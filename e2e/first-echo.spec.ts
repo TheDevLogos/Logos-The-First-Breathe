@@ -11,6 +11,9 @@ test('the first echo can be experienced and a memory chosen', async ({ page }) =
   await page.keyboard.press('e');
   await expect(page.getByRole('heading', { name: /La memoria del principio/i })).toBeVisible();
   await page.getByRole('button', { name: /Seguir el eco/i }).click();
+  await expect(page.getByRole('heading', { name: /La confianza se quebró/i })).toBeVisible();
+  await expect(page.getByText(/distancia de Dios/i)).toBeVisible();
+  await page.getByRole('button', { name: /Responder al testimonio/i }).click();
   await expect(page.getByRole('heading', { name: /Qué harás con esta memoria/i })).toBeVisible();
   await page.getByRole('button', { name: /Compartirla/i }).click();
   await expect(page.getByRole('heading', { name: /Una luz compartida/i })).toBeVisible();
