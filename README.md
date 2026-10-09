@@ -29,4 +29,4 @@ The protagonist, Aren, is a later witness to preserved echoes of the beginning. 
 
 ## Current slice
 
-The first playable slice introduces the garden, its witness, and a small decision about what to do with a memory. The choice affects Aren's response to the memory, not the historical event itself.
+The first playable slice introduces the garden, its witness, and a small decision about what to do with a memory. Move Aren with WASD or the arrow keys, approach the golden echo, and press E to interact. Touch controls appear on narrow screens. The choice affects Aren's response to the memory, not the historical event itself.

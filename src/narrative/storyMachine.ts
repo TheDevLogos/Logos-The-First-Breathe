@@ -2,6 +2,7 @@ import { assign, createMachine } from 'xstate';
 
 export type StoryEvent =
   | { type: 'BEGIN' }
+  | { type: 'INTERACT' }
   | { type: 'CONTINUE' }
   | { type: 'CHOOSE'; choice: 'share' | 'keep' }
   | { type: 'RESTART' };
@@ -16,7 +17,8 @@ export const storyMachine = createMachine({
   context: { choice: null },
   states: {
     title: { on: { BEGIN: 'garden' } },
-    garden: { on: { CONTINUE: 'decision' } },
+    garden: { on: { INTERACT: 'echo' } },
+    echo: { on: { CONTINUE: 'decision' } },
     decision: {
       on: {
         CHOOSE: {

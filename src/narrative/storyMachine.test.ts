@@ -10,6 +10,10 @@ describe('storyMachine', () => {
     actor.send({ type: 'BEGIN' });
     expect(actor.getSnapshot().value).toBe('garden');
     actor.send({ type: 'CONTINUE' });
+    expect(actor.getSnapshot().value).toBe('garden');
+    actor.send({ type: 'INTERACT' });
+    expect(actor.getSnapshot().value).toBe('echo');
+    actor.send({ type: 'CONTINUE' });
     expect(actor.getSnapshot().value).toBe('decision');
     actor.send({ type: 'CHOOSE', choice: 'share' });
 
@@ -21,6 +25,7 @@ describe('storyMachine', () => {
   it('can restart the experience and clear the transient story choice', () => {
     const actor = createActor(storyMachine).start();
     actor.send({ type: 'BEGIN' });
+    actor.send({ type: 'INTERACT' });
     actor.send({ type: 'CONTINUE' });
     actor.send({ type: 'CHOOSE', choice: 'keep' });
     actor.send({ type: 'RESTART' });

@@ -1,7 +1,9 @@
 import { useMachine } from '@xstate/react';
+import { useState, type PointerEvent } from 'react';
 import { storyMachine } from '../narrative/storyMachine';
 import { useGameStore } from '../state/gameStore';
 import { GardenScene } from '../world/GardenScene';
+import { setControl, tapControl, type GameControl } from '../world/controlInput';
 
 const chapterLabel = 'Prólogo · Los ecos del principio';
 
@@ -10,6 +12,7 @@ export function GameApp() {
   const reducedMotion = useGameStore((state) => state.reducedMotion);
   const setReducedMotion = useGameStore((state) => state.setReducedMotion);
   const setChoice = useGameStore((state) => state.setChoice);
+  const [nearEcho, setNearEcho] = useState(false);
   const stage = story.value;
 
   const choose = (choice: 'share' | 'keep') => {
@@ -17,9 +20,14 @@ export function GameApp() {
     send({ type: 'CHOOSE', choice });
   };
 
+  const holdControl = (control: GameControl, pressed: boolean) => (event: PointerEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setControl(control, pressed);
+  };
+
   return (
     <main className={`game-shell${reducedMotion ? ' reduced-motion' : ''}`}>
-      <div className="world-layer" aria-hidden="true"><GardenScene /></div>
+      <div className="world-layer" aria-hidden="true"><GardenScene active={stage === 'garden'} onEchoInteract={() => send({ type: 'INTERACT' })} onEchoNearby={setNearEcho} /></div>
       <div className="atmosphere" aria-hidden="true" />
 
       <header className="topbar">
@@ -61,7 +69,16 @@ export function GameApp() {
           <>
             <p className="eyebrow">El mundo aún respira en armonía</p>
             <h2>Todo tenía<br /><em>un lugar.</em></h2>
-            <p className="story-copy">La luz tocaba el agua sin romperla. Aren escuchó aquel orden con reverencia: una historia que podía contemplar, jamás reescribir.</p>
+            <p className="story-copy">La luz tocaba el agua sin romperla. Guía a Aren hasta el halo dorado y escucha el primer eco; esta memoria puede contemplarse, jamás reescribirse.</p>
+            <p className="control-hint">{nearEcho ? <>Estás junto al eco · pulsa <span>E</span> para escucharlo</> : <><span>W A S D</span> o flechas para acercarte al halo</>}</p>
+          </>
+        )}
+
+        {stage === 'echo' && (
+          <>
+            <p className="eyebrow">El primer eco ha sido encontrado</p>
+            <h2>La memoria<br /><em>del principio.</em></h2>
+            <p className="story-copy">Aren escuchó el silencio que precedió a su propia historia. El recuerdo permanece intacto; lo que nazca de él dependerá de quien lo guarda.</p>
             <button className="primary-button" type="button" onClick={() => send({ type: 'CONTINUE' })}>
               Seguir el eco <span aria-hidden="true">↗</span>
             </button>
@@ -100,6 +117,15 @@ export function GameApp() {
         <span className="coordinates">EDÉN · MEMORIA I</span>
       </footer>
       <div className="focus-hint" aria-hidden="true"><span>✧</span> OBSERVA · RECUERDA · ELIGE</div>
+      {stage === 'garden' && (
+        <div className="touch-controls" aria-label="Controles de movimiento">
+          <button type="button" aria-label="Mover hacia adelante" onPointerDown={holdControl('up', true)} onPointerUp={holdControl('up', false)} onPointerLeave={holdControl('up', false)} onPointerCancel={holdControl('up', false)}>↑</button>
+          <button type="button" aria-label="Mover a la izquierda" onPointerDown={holdControl('left', true)} onPointerUp={holdControl('left', false)} onPointerLeave={holdControl('left', false)} onPointerCancel={holdControl('left', false)}>←</button>
+          <button type="button" aria-label="Interactuar con el eco" onClick={() => tapControl('interact')}>E</button>
+          <button type="button" aria-label="Mover a la derecha" onPointerDown={holdControl('right', true)} onPointerUp={holdControl('right', false)} onPointerLeave={holdControl('right', false)} onPointerCancel={holdControl('right', false)}>→</button>
+          <button type="button" aria-label="Retroceder" onPointerDown={holdControl('down', true)} onPointerUp={holdControl('down', false)} onPointerLeave={holdControl('down', false)} onPointerCancel={holdControl('down', false)}>↓</button>
+        </div>
+      )}
     </main>
   );
 }
