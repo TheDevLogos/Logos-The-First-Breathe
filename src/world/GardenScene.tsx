@@ -2,7 +2,7 @@ import { Canvas } from '@react-three/fiber';
 import { ContactShadows, Environment, Float, Sparkles } from '@react-three/drei';
 import { Physics, RigidBody } from '@react-three/rapier';
 import { Suspense } from 'react';
-import { ObservingTraveler } from './ObservingTraveler';
+import { ControllableTraveler } from './ControllableTraveler';
 
 function Tree({ position, size = 1 }: { position: [number, number, number]; size?: number }) {
   return (
@@ -54,6 +54,13 @@ function Garden() {
         <circleGeometry args={[1.4, 32]} />
         <meshStandardMaterial color="#adc0b0" roughness={0.18} metalness={0.04} />
       </mesh>
+      <Float speed={0.55} rotationIntensity={0.12} floatIntensity={0.18}>
+        <mesh position={[0.15, 0.7, -4.8]}>
+          <octahedronGeometry args={[0.28, 0]} />
+          <meshBasicMaterial color="#f2dfac" />
+        </mesh>
+      </Float>
+      <Sparkles count={12} position={[0.15, 0.8, -4.8]} scale={[1.3, 1.8, 1.3]} size={2.6} speed={0.22} color="#f2dfac" opacity={0.78} />
 
       <Tree position={[-4.2, 0, -6.4]} size={1.35} />
       <Tree position={[4.5, 0, -7.2]} size={1.7} />
@@ -70,12 +77,17 @@ function Garden() {
       </Float>
       <Sparkles count={24} scale={[12, 3, 10]} size={2.2} speed={0.18} color="#f2dfac" opacity={0.48} />
       <ContactShadows position={[0, 0.02, 0]} scale={18} blur={2.4} opacity={0.32} far={7} />
-      <ObservingTraveler />
     </>
   );
 }
 
-export function GardenScene() {
+interface GardenSceneProps {
+  active: boolean;
+  onEchoInteract: () => void;
+  onEchoNearby: (nearby: boolean) => void;
+}
+
+export function GardenScene({ active, onEchoInteract, onEchoNearby }: GardenSceneProps) {
   return (
     <Canvas
       shadows
@@ -87,6 +99,7 @@ export function GardenScene() {
       <Suspense fallback={null}>
         <Garden />
       </Suspense>
+      <ControllableTraveler active={active} onEchoInteract={onEchoInteract} onEchoNearby={onEchoNearby} />
     </Canvas>
   );
 }
